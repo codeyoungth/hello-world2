@@ -1,0 +1,27 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+###.gitignore
+###xc-framework-common/src/main/java/com/xuecheng/framework/exception/
+###xc-framework-common/src/main/java/com/xuecheng/framework/interceptor/
+###xc-framework-common/src/main/resources/
+###xc-framework-common/src/test/
+###xc-framework-model/src/main/resources/
+###xc-framework-model/src/test/
+###xc-framework-model/target/generated-sources/
+###xc-framework-utils/src/main/resources/
+###xc-framework-utils/src/test/
+###xc-service-api/src/main/resources/
+###xc-service-api/src/test/
+###xc-service-api/target/generated-sources/
+###xc-service-manage-cms/src/main/java/com/xuecheng/manage_cms/config/
+###xc-service-manage-cms/src/main/java/com/xuecheng/manage_cms/dao/
+###xc-service-manage-cms/src/main/java/com/xuecheng/manage_cms/service/
+###xc-service-manage-cms/src/test/
+###xc-service-manage-cms/target/generated-sources/
