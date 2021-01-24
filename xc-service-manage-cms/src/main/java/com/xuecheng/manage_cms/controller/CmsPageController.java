@@ -30,4 +30,16 @@ public class CmsPageController implements CmsPageControllerApi {
        return  pageService.save(cmsPage);
     }
 
+
+    @Override
+    @GetMapping("/get/{id}")
+    public CmsPage findById(@PathVariable("id") String id) {
+        return pageService.getById(id);
+    }
+
+    @Override
+    @PutMapping("/edit/{id}")//这里使用put方法，http中put表示更新
+    public CmsPageResult editPage(@PathVariable("id") String id, @RequestBody CmsPage cmsPage) {
+        return pageService.editPage(id,cmsPage);
+    }
 }
