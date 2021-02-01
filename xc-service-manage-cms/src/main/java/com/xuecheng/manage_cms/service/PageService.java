@@ -3,9 +3,8 @@ package com.xuecheng.manage_cms.service;
 import com.xuecheng.framework.domain.cms.CmsPage;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
-import com.xuecheng.framework.model.response.CommonCode;
-import com.xuecheng.framework.model.response.QueryResponseResult;
-import com.xuecheng.framework.model.response.QueryResult;
+import com.xuecheng.framework.exception.ExceptionCast;
+import com.xuecheng.framework.model.response.*;
 import com.xuecheng.manage_cms.dao.CmsPageRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -114,16 +113,23 @@ public class PageService {
      * @date 2020-07-02
      */
     public CmsPageResult save(CmsPage cmsPage) {
+        //先判断cmsPage是否为空
+        if (cmsPage == null) {
+            //抛出异常，非法请求
+            ExceptionCast.cast(CmsCode.PARAMS_IS_NULL);
+        }
+
         //检验页面是否存在，根据页面名称、站点id、访问路径
         CmsPage page = cmsPageRepository.findByPageNameAndSiteIdAndPageWebPath(cmsPage.getPageName(), cmsPage.getSiteId(), cmsPage.getPageWebPath());
 
-        if (page == null) {
-            cmsPage.setPageId(null);
-            cmsPageRepository.save(cmsPage);
-            CmsPageResult cmsPageResult = new CmsPageResult(CommonCode.SUCCESS, cmsPage);
-            return cmsPageResult;
+        if (page != null) {
+            //抛出异常，已存在相同的页面名称
+            ExceptionCast.cast(CmsCode.CMS_PAGE_EXIST);
         }
-        return new CmsPageResult(CommonCode.FAIL, null);
+        cmsPage.setPageId(null);
+        cmsPageRepository.save(cmsPage);
+        CmsPageResult cmsPageResult = new CmsPageResult(CommonCode.SUCCESS, cmsPage);
+        return cmsPageResult;
     }
 
     //根据id查询页面
@@ -153,12 +159,24 @@ public class PageService {
             one.setPagePhysicalPath(cmsPage.getPagePhysicalPath());
             //执行更新
             CmsPage save = cmsPageRepository.save(one);
-            if (save!=null){
-                return new CmsPageResult(CommonCode.SUCCESS,save);
+            if (save != null) {
+                return new CmsPageResult(CommonCode.SUCCESS, save);
             }
         }
 
-        return new CmsPageResult(CommonCode.FAIL,null);
+        return new CmsPageResult(CommonCode.FAIL, null);
+
+    }
+
+
+    //删除页面信息
+    public ResponseResult delete(String id) {
+        CmsPage byId = this.getById(id);
+        if (byId != null) {
+            cmsPageRepository.deleteById(id);
+            return new ResponseResult(CommonCode.SUCCESS);
+        }
+        return new ResponseResult(CommonCode.FAIL);
 
     }
 
