@@ -22,6 +22,8 @@ public class QueryPageRequest {
     //页面id
     @ApiModelProperty("页面id")
     private String  pageId;
-    //分页
+    //页面类型
+    @ApiModelProperty("页面类型")
+    private String  pageType;
 
 }

@@ -68,6 +68,10 @@ public class PageService {
         //页面名称模糊查询，需要自定义字符串的匹配器实现模糊查询
         ExampleMatcher matcher = ExampleMatcher.matching();
         matcher = matcher.withMatcher("pageAliase", ExampleMatcher.GenericPropertyMatchers.contains());
+        matcher = matcher.withMatcher("siteId", ExampleMatcher.GenericPropertyMatchers.exact());
+        matcher = matcher.withMatcher("pageName", ExampleMatcher.GenericPropertyMatchers.contains());
+        matcher = matcher.withMatcher("pageType", ExampleMatcher.GenericPropertyMatchers.exact());
+
 
         //条件值
         CmsPage cmsPage = new CmsPage();
@@ -81,6 +85,15 @@ public class PageService {
             cmsPage.setPageAliase(request.getPageAliase());
         }
 
+        //页面别名
+        if (StringUtils.isNotBlank(request.getPageName())) {
+            cmsPage.setPageName(request.getPageName());
+        }
+
+        //页面别名
+        if (StringUtils.isNotBlank(request.getPageType())) {
+            cmsPage.setPageType(request.getPageType());
+        }
         //创建条件实例
         Example<CmsPage> ex = Example.of(cmsPage, matcher);
 
