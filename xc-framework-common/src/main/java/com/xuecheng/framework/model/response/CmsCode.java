@@ -10,11 +10,11 @@ import lombok.ToString;
 @ToString
 public enum CmsCode implements ResultCode{
     CMS_PAGE_EXIST(false,24001,"页面信息已存在!"),
+    CMS_GENERATEHTML_DATAURLISNULL(false,24002,"从页面信息中找不到获取数据的url!"),
     CMS_PAGE_NOTEXISTS(false,24003,"页面信息不存在!"),
-    CMS_GENERATEHTML_DATAURLISNULL(false,24004,"页面dataUrl为空!"),
     CMS_GENERATEHTML_TEMPLATEISNULL(false,24005,"页面模板数据为空!"),
     CMS_GENERATEHTML_DATAISNULL(false,24006,"模型数据为空!"),
-    PARAMS_IS_NULL(false,24002,"非法请求，参数为空！");
+    PARAMS_IS_NULL(false,24004,"非法请求，参数为空！");
 
     //操作结果
     boolean success;
