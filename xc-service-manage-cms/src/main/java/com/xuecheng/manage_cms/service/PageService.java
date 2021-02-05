@@ -158,7 +158,7 @@ public class PageService {
         //先判断cmsPage是否为空
         if (cmsPage == null) {
             //抛出异常，非法请求
-            ExceptionCast.cast(CmsCode.PARAMS_IS_NULL);
+            ExceptionCast.cast(CmsCode.CMS_PAGE_NOTEXISTS);
         }
 
         //检验页面是否存在，根据页面名称、站点id、访问路径
@@ -166,7 +166,7 @@ public class PageService {
 
         if (page != null) {
             //抛出异常，已存在相同的页面名称
-            ExceptionCast.cast(CmsCode.CMS_PAGE_EXIST);
+            ExceptionCast.cast(CmsCode.CMS_ADDPAGE_EXISTSNAME);
         }
         cmsPage.setPageId(null);
         cmsPageRepository.save(cmsPage);
@@ -329,5 +329,6 @@ public class PageService {
         Map respMap = forEntity.getBody();
         return respMap;
     }
+
 
 }

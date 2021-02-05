@@ -149,18 +149,18 @@
 
         </dependencies>
     </dependencyManagement>
-    <build>
+   <!-- <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-           <!-- &lt;!&ndash; 资源文件拷贝插件 &ndash;&gt;
+           &lt;!&ndash; &lt;!&ndash; 资源文件拷贝插件 &ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
-            </plugin>-->
-            <!-- java编译插件 -->
+            </plugin>&ndash;&gt;
+            &lt;!&ndash; java编译插件 &ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -175,6 +175,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
 
 </project>
