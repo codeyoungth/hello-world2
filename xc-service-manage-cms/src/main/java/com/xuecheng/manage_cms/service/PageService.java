@@ -1,5 +1,6 @@
 package com.xuecheng.manage_cms.service;
 
+import com.alibaba.fastjson.JSON;
 import com.mongodb.client.gridfs.GridFSBucket;
 import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.GridFSFindIterable;
@@ -10,6 +11,7 @@ import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.*;
+import com.xuecheng.manage_cms.config.RabbitmqConfig;
 import com.xuecheng.manage_cms.dao.CmsPageRepository;
 import com.xuecheng.manage_cms.dao.CmsTemplateRepository;
 import freemarker.cache.StringTemplateLoader;
@@ -18,6 +20,7 @@ import freemarker.template.Template;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.types.ObjectId;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -30,6 +33,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -50,6 +54,9 @@ public class PageService {
 
     @Autowired
     private GridFSBucket gridFSBucket;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     /*
      *页面列表分页查询
@@ -349,8 +356,25 @@ public class PageService {
         }
         //保存静态化文件
         saveHtml(pageId,pageHtml);
+        //发送消息
+        sendPostPage(pageId);
+        return new ResponseResult(CommonCode.SUCCESS);
+    }
 
+    //发送页面发布消息
+    private void sendPostPage(String pageId){
+        CmsPage cmsPage = this.getById(pageId);
+        if (cmsPage==null){
+            ExceptionCast.cast(CmsCode.CMS_PAGE_NOTEXISTS);
+        }
 
+        Map<String ,String> msgMap=new HashMap<>();
+        msgMap.put("pageId",pageId);
+        String mapStr = JSON.toJSONString(msgMap);
+        //获取站点id作为routingKey
+        String siteId = cmsPage.getSiteId();
+        //发布消息
+        rabbitTemplate.convertAndSend(RabbitmqConfig.EX_ROUTING_CMS_POSTPAGE,siteId,mapStr);
     }
 
 

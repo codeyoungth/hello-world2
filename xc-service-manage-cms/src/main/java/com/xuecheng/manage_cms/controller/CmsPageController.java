@@ -52,6 +52,6 @@ public class CmsPageController implements CmsPageControllerApi {
 
     @Override
     public ResponseResult post(String pageId) {
-        return null;
+        return pageService.postPage(pageId);
     }
 }
