@@ -6,13 +6,16 @@ import com.mongodb.client.gridfs.GridFSDownloadStream;
 import com.mongodb.client.gridfs.GridFSFindIterable;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import com.xuecheng.framework.domain.cms.CmsPage;
+import com.xuecheng.framework.domain.cms.CmsSite;
 import com.xuecheng.framework.domain.cms.CmsTemplate;
 import com.xuecheng.framework.domain.cms.request.QueryPageRequest;
 import com.xuecheng.framework.domain.cms.response.CmsPageResult;
+import com.xuecheng.framework.domain.cms.response.CmsPostPageResult;
 import com.xuecheng.framework.exception.ExceptionCast;
 import com.xuecheng.framework.model.response.*;
 import com.xuecheng.manage_cms.config.RabbitmqConfig;
 import com.xuecheng.manage_cms.dao.CmsPageRepository;
+import com.xuecheng.manage_cms.dao.CmsSiteRepository;
 import com.xuecheng.manage_cms.dao.CmsTemplateRepository;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
@@ -42,6 +45,9 @@ public class PageService {
 
     @Autowired
     private CmsPageRepository cmsPageRepository;
+
+    @Autowired
+    private CmsSiteRepository cmsSiteRepository;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -340,6 +346,53 @@ public class PageService {
         Map respMap = forEntity.getBody();
         return respMap;
     }
+
+    //一键发布页面
+    public CmsPostPageResult postPageQuick(CmsPage cmsPage){
+        //添加页面
+        CmsPageResult cmsPageResult = this.save(cmsPage);
+        if (!cmsPageResult.isSuccess()){
+            return new CmsPostPageResult(CommonCode.FAIL,null);
+        }
+         cmsPage = cmsPageResult.getCmsPage();
+        //发布页面的id
+        String pageId = cmsPage.getPageId();
+        //发布页面
+        ResponseResult responseResult = this.postPage(pageId);
+        if (!responseResult.isSuccess()){
+            return new CmsPostPageResult(CommonCode.FAIL,null);
+        }
+        //得到页面的url
+        //页面url=站点域名+站点webpath+页面webpath+页面名称
+        //站点id
+        String siteId = cmsPage.getSiteId();
+        //查询站点信息
+        CmsSite cmsSite = findCmsSiteById(siteId);
+        if (cmsSite==null){
+            return new CmsPostPageResult(CommonCode.FAIL,null);
+        }
+        //站点域名
+        String siteDomain = cmsSite.getSiteDomain();
+        //站点webpath
+        String siteWebPath = cmsSite.getSiteWebPath();
+        //页面webpath
+        String pageWebPath = cmsPage.getPageWebPath();
+        //页面名称
+        String pageName = cmsPage.getPageName();
+        //页面的web访问地址
+        String pageUrl=siteDomain+siteWebPath+pageWebPath+pageName;
+        return new CmsPostPageResult(CommonCode.SUCCESS,pageUrl);
+    }
+
+    //根据id查询站点信息
+    public CmsSite findCmsSiteById(String id){
+        Optional<CmsSite> cmsSiteOptional = cmsSiteRepository.findById(id);
+        if (cmsSiteOptional.isPresent()){
+            return cmsSiteOptional.get();
+        }
+        return null;
+    }
+
 
     /**
      * 页面发布

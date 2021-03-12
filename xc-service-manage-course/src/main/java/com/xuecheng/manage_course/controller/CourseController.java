@@ -1,9 +1,9 @@
 package com.xuecheng.manage_course.controller;
 
 import com.xuecheng.api.course.CourseControllerApi;
-import com.xuecheng.framework.domain.course.CourseBase;
-import com.xuecheng.framework.domain.course.CourseMarket;
-import com.xuecheng.framework.domain.course.Teachplan;
+import com.xuecheng.framework.domain.cms.response.CoursePreviewResult;
+import com.xuecheng.framework.domain.cms.response.CoursePublishResult;
+import com.xuecheng.framework.domain.course.*;
 import com.xuecheng.framework.domain.course.ext.TeachplanNode;
 import com.xuecheng.framework.domain.course.request.CourseListRequest;
 import com.xuecheng.framework.model.response.QueryResponseResult;
@@ -66,5 +66,41 @@ public class CourseController implements CourseControllerApi {
     @PutMapping("/market/{id}")
     public ResponseResult updateCourseMarket(@PathVariable("id") String id, CourseMarket courseMarket) {
         return courseService.updateCourseMarket(id,courseMarket);
+    }
+
+    @Override
+    @PostMapping("/coursepic/add")
+    public ResponseResult addCoursePic(String courseId, String pic) {
+        return courseService.saveCoursePic(courseId,pic);
+    }
+
+    @Override
+    @PostMapping("coursepic/list/{courseId}")
+    public CoursePic findCoursePic(@PathVariable("courseId") String courseId) {
+        return courseService.findCoursePic(courseId);
+    }
+
+    @Override
+    @DeleteMapping("/coursepic/delete")
+    public ResponseResult delCoursePic(@RequestParam("courseId") String courseId) {
+        return courseService.delCoursePic(courseId);
+    }
+
+    @Override
+    @GetMapping("/courseview/{id}")
+    public CourseView findCourseView(@PathVariable("id") String courseId) {
+        return courseService.findCourseView(courseId);
+    }
+
+    @Override
+    @PostMapping("/preview/{id}")
+    public CoursePreviewResult preview(@PathVariable("id") String id) {
+        return courseService.preview(id);
+    }
+
+    @Override
+    @PostMapping("/publish/{id}")
+    public CoursePublishResult publish(@PathVariable("id") String id) {
+        return courseService.publish(id);
     }
 }
