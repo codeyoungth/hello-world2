@@ -35,9 +35,6 @@ xc-service-api/target/classes/com/xuecheng/api/cms/CmsSiteControllerApi.class
 xc-service-api/target/classes/com/xuecheng/api/course/
 xc-service-api/target/classes/com/xuecheng/api/system/
 xc-service-api/target/generated-sources/
-xc-service-base-filesystem/src/main/java/com/xuecheng/filesystem/controller/
-xc-service-base-filesystem/src/main/java/com/xuecheng/filesystem/dao/
-xc-service-base-filesystem/src/main/java/com/xuecheng/filesystem/service/
 xc-service-base-filesystem/src/test/
 xc-service-base-filesystem/target/generated-sources/
 xc-service-manage-cms-client/pom.xml
